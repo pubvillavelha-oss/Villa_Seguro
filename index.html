@@ -215,7 +215,7 @@
 <script>
 /* ====== CONFIG ====== */
 // COLE AQUI A URL DO WEB APP (Apps Script) após o deploy:
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7nR8HWULpcxpLxrOfcKtY3oT8g_jmHPJD1p-01KQd60qbFGEhpc30hxmHzbV0ODY/exec';
+const WEB_APP_URL = 'COLE_A_URL_DO_WEB_APP_AQUI';
 
 /* ====== DADOS ====== */
 const CATEGORIAS = [
@@ -229,6 +229,16 @@ const CATEGORIAS = [
 ];
 
 let denuncia = {categoria:null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:''};
+
+/* ====== TOKEN DO DISPOSITIVO (chave de acesso por device) ====== */
+function getTokenDispositivo(){
+  let token = localStorage.getItem('vs_token');
+  if(!token){
+    token = 'tk_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,12);
+    localStorage.setItem('vs_token', token);
+  }
+  return token;
+}
 
 /* ====== NAVEGAÇÃO ====== */
 function irPara(id){
@@ -299,7 +309,8 @@ async function enviarDenuncia(){
     categoria:c.nome, prioridade:c.prio, local:denuncia.local,
     mesa:denuncia.mesa, descricao:denuncia.desc,
     midia:denuncia.midia, midiaNome:denuncia.midiaNome,
-    canal:'QR Code', timestamp:new Date().toISOString()
+    canal:'QR Code', timestamp:new Date().toISOString(),
+    token:getTokenDispositivo()   // chave de acesso do dispositivo
   };
   try{
     const resp=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
@@ -346,7 +357,8 @@ async function consultarProtocolo(){
   errEl.textContent='';
   if(!proto){ errEl.textContent='Informe o número do protocolo.'; return; }
   try{
-    const resp=await fetch(WEB_APP_URL+'?protocolo='+encodeURIComponent(proto));
+    const token = getTokenDispositivo();
+    const resp=await fetch(WEB_APP_URL+'?protocolo='+encodeURIComponent(proto)+'&token='+encodeURIComponent(token));
     const data=await resp.json();
     if(!data.ok){ errEl.textContent=data.erro||'Protocolo não encontrado.'; document.getElementById('card-timeline').style.display='none'; return; }
     renderTimeline(data);
