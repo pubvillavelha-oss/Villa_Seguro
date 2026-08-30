@@ -115,11 +115,11 @@
       <div class="escudo">🛡️</div>
       <div>
         <h1>Villa Seguro</h1>
-        <p>Denúncia anônima · Sua segurança importa</p>
+        <p>Contribuição anônima · Sua segurança importa</p>
       </div>
     </div>
 
-    <button class="btn-denuncia" onclick="novaDenuncia()">🛡️ Fazer Denúncia</button>
+    <button class="btn-denuncia" onclick="novaDenuncia()">🛡️ Contribuir</button>
 
     <!-- Acompanhamento SEMPRE visível na primeira tela -->
     <button class="btn-acompanhar" onclick="irPara('tela-acompanhar')">🔍 Acompanhar protocolo</button>
@@ -127,7 +127,7 @@
     <h3 style="font-size:14px;margin-bottom:10px">O que está acontecendo?</h3>
     <div class="grid" id="grid-categorias"></div>
 
-    <h3 style="font-size:14px;margin:22px 0 10px">Meus relatos</h3>
+    <h3 style="font-size:14px;margin:22px 0 10px">Minhas contribuições</h3>
     <div id="lista-relatos"></div>
   </section>
 
@@ -168,14 +168,14 @@
 
   <!-- ============ T04 - PASSO 3: CONFIRMAÇÃO ============ -->
   <section id="tela-passo3" class="tela">
-    <div class="topo"><button class="voltar" onclick="irPara('tela-passo2')">←</button><h2>Confirme sua denúncia</h2></div>
+    <div class="topo"><button class="voltar" onclick="irPara('tela-passo2')">←</button><h2>Confirme sua contribuição</h2></div>
     <div class="card">
       <div id="resumo-confirmacao"></div>
-      <div class="aviso" style="margin-top:14px">🔒 Seu anonimato é garantido. Nenhum dado pessoal é solicitado ou armazenado. Sua denúncia vai direto para a equipe de segurança.</div>
+      <div class="aviso" style="margin-top:14px">🔒 Seu anonimato é garantido. Nenhum dado pessoal é solicitado ou armazenado. Sua contribuição vai direto para a equipe de segurança, ajudando a manter o Villa um ambiente cada vez mais seguro e agradável para todos.</div>
     </div>
     <div class="linha-botoes">
       <button class="btn btn-sec" onclick="irPara('tela-passo2')">← Voltar</button>
-      <button class="btn btn-prim" onclick="enviarDenuncia()">Enviar anonimamente</button>
+      <button class="btn btn-prim" onclick="enviarDenuncia()">Enviar contribuição</button>
     </div>
     <div class="carregando" id="status-envio" style="display:none">Enviando...</div>
   </section>
@@ -184,7 +184,7 @@
   <section id="tela-sucesso" class="tela">
     <div class="protocolo">
       <div class="ok">✅</div>
-      <h2>Denúncia enviada!</h2>
+      <h2>Obrigado por contribuir!</h2>
       <p style="color:var(--cinza);font-size:13px;margin-top:6px">Guarde seu protocolo para acompanhar:</p>
       <div class="num" id="p-protocolo">#----</div>
       <span class="chip">Status: <b id="p-status">Recebido</b></span>
@@ -215,7 +215,7 @@
 <script>
 /* ====== CONFIG ====== */
 // COLE AQUI A URL DO WEB APP (Apps Script) após o deploy:
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7nR8HWULpcxpLxrOfcKtY3oT8g_jmHPJD1p-01KQd60qbFGEhpc30hxmHzbV0ODY/exec';
+const WEB_APP_URL = 'COLE_A_URL_DO_WEB_APP_AQUI';
 
 /* ====== DADOS ====== */
 const CATEGORIAS = [
@@ -337,7 +337,7 @@ function salvarRelatoLocal(protocolo,cat,ic,status){
 function renderRelatos(){
   const lista=JSON.parse(localStorage.getItem('vs_relatos')||'[]');
   const el=document.getElementById('lista-relatos');
-  if(!lista.length){ el.innerHTML='<div class="vazio">Você ainda não fez denúncias.</div>'; return; }
+  if(!lista.length){ el.innerHTML='<div class="vazio">Você ainda não fez contribuições.</div>'; return; }
   el.innerHTML=lista.map(r=>`
     <div class="relato">
       <div><div class="cat">${r.ic} ${r.cat}</div><div class="st">${r.protocolo} · ${r.quando}</div></div>
