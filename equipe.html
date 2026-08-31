@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0f0a1a">
+<title>Villa Seguro — Painel da Equipe</title>
+<style>
+  :root{
+    --bg:#0f0a1a; --card:#1a1226; --card2:#221735; --texto:#f2ecff;
+    --roxo:#8b5cf6; --roxo2:#6d28d9; --laranja:#f97316; --cinza:#9ca3af;
+    --verde:#22c55e; --ambar:#f59e0b; --vermelho:#ef4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--texto);min-height:100vh}
+  .wrap{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+
+  .card{background:var(--card);border:1px solid #2b1e42;border-radius:16px;padding:16px;margin-bottom:14px}
+  .card h3{font-size:15px;margin-bottom:12px;font-weight:800}
+  .rotulo{font-size:12px;color:var(--cinza);margin:12px 0 6px;display:block}
+  input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid #2b1e42;
+    background:var(--card2);color:var(--texto);font-size:14px;font-family:inherit}
+  textarea{resize:vertical;min-height:70px}
+  select option{background:var(--card2)}
+
+  .btn{width:100%;padding:14px;border:none;border-radius:14px;cursor:pointer;font-size:15px;font-weight:800}
+  .btn-prim{background:linear-gradient(135deg,var(--roxo),var(--roxo2));color:#fff}
+  .btn-verde{background:var(--verde);color:#062b14}
+  .btn-sec{background:transparent;border:1px solid #2b1e42;color:var(--texto)}
+  .btn-prim:active,.btn-sec:active,.btn-verde:active{transform:scale(.98)}
+  .linha{display:flex;gap:10px;margin-top:14px}
+  .linha .btn{flex:1}
+
+  .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+  .header h1{font-size:20px;font-weight:800}
+  .header .escudo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--roxo),var(--roxo2));
+    display:flex;align-items:center;justify-content:center;font-size:22px}
+  .header-lado{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .header-lado .btn{width:auto;padding:8px 12px;font-size:12.5px}
+
+  .filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .filtros button{background:var(--card2);border:1px solid #2b1e42;color:var(--texto);border-radius:999px;
+    padding:7px 14px;font-size:12.5px;cursor:pointer}
+  .filtros button.ativo{border-color:var(--roxo);background:var(--card)}
+
+  .ocorrencia{display:flex;justify-content:space-between;align-items:center;background:var(--card);
+    border:1px solid #2b1e42;border-left:4px solid var(--cinza);border-radius:12px;padding:14px;
+    margin-bottom:10px;cursor:pointer;transition:.15s}
+  .ocorrencia:active{transform:scale(.99)}
+  .ocorrencia.critica{border-left-color:var(--vermelho)}
+  .ocorrencia.alta{border-left-color:var(--laranja)}
+  .ocorrencia.media{border-left-color:var(--ambar)}
+  .ocorrencia.baixa{border-left-color:var(--cinza)}
+  .ocorrencia .cat{font-size:14px;font-weight:700}
+  .ocorrencia .meta{font-size:12px;color:var(--cinza);margin-top:3px}
+
+  .badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+  .b-critica{background:rgba(239,68,68,.18);color:var(--vermelho)}
+  .b-alta{background:rgba(249,115,22,.18);color:var(--laranja)}
+  .b-media{background:rgba(245,158,11,.18);color:var(--ambar)}
+  .b-baixa{background:rgba(156,163,175,.18);color:var(--cinza)}
+  .b-recebido{background:rgba(245,158,11,.15);color:var(--ambar)}
+  .b-analise{background:rgba(139,92,246,.15);color:#c4b5fd}
+  .b-resolvido{background:rgba(34,197,94,.15);color:var(--verde)}
+  .b-semprocedencia{background:rgba(156,163,175,.15);color:var(--cinza)}
+
+  .vazio{color:var(--cinza);text-align:center;font-size:13px;padding:24px}
+  .erro{color:var(--vermelho);font-size:12.5px;margin-top:8px;text-align:center}
+  .sucesso{color:var(--verde);font-size:12.5px;margin-top:8px;text-align:center}
+  .carregando{color:var(--cinza);font-size:13px;text-align:center;padding:16px}
+
+  .topo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .topo h2{font-size:17px;font-weight:800}
+  .voltar{background:none;border:none;color:var(--texto);font-size:20px;cursor:pointer;padding:4px}
+  .detalhe-linha{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2b1e42;font-size:13.5px}
+  .detalhe-linha .k{color:var(--cinza)}
+  .detalhe-linha .v{font-weight:700;text-align:right;max-width:60%}
+  .link-midia{color:#c4b5fd;text-decoration:none;font-weight:700}
+
+  .seguranca{display:flex;justify-content:space-between;align-items:center;background:var(--card);
+    border:1px solid #2b1e42;border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .seguranca .nm{font-size:14px;font-weight:700}
+  .seguranca .tl{font-size:12px;color:var(--cinza);margin-top:2px}
+  .seguranca .remover{border:none;background:transparent;color:var(--vermelho);font-size:12px;
+    font-weight:700;cursor:pointer;padding:6px 10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== LOGIN ===== -->
+  <section id="tela-login">
+    <div class="card" style="max-width:380px;margin:60px auto">
+      <div style="text-align:center;margin-bottom:16px">
+        <div class="escudo" style="margin:0 auto 10px">🛡️</div>
+        <h3>Painel da Equipe</h3>
+        <p style="color:var(--cinza);font-size:12.5px">Acesso restrito à equipe de segurança</p>
+      </div>
+      <span class="rotulo">Senha</span>
+      <input type="password" id="f-senha" placeholder="Digite a senha">
+      <button class="btn btn-prim" style="margin-top:14px" onclick="entrar()">Entrar</button>
+      <div class="erro" id="erro-login"></div>
+    </div>
+  </section>
+
+  <!-- ===== LISTA DE OCORRÊNCIAS ===== -->
+  <section id="tela-lista" style="display:none">
+    <div class="header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="escudo">🛡️</div>
+        <div><h1>Ocorrências</h1><p style="font-size:12px;color:var(--cinza)">Painel da equipe</p></div>
+      </div>
+      <div class="header-lado">
+        <button class="btn btn-sec" onclick="abrirSegurancas()">👥 Segur.</button>
+        <button class="btn btn-sec" onclick="abrirConfig()">⚙️</button>
+        <button class="btn btn-sec" onclick="sair()">Sair</button>
+      </div>
+    </div>
+    <div class="filtros" id="filtros">
+      <button class="ativo" data-f="todos" onclick="filtrar('todos',this)">Todos</button>
+      <button data-f="Recebido" onclick="filtrar('Recebido',this)">Recebidos</button>
+      <button data-f="Em análise" onclick="filtrar('Em análise',this)">Em análise</button>
+      <button data-f="Resolvido" onclick="filtrar('Resolvido',this)">Resolvidos</button>
+      <button data-f="Sem procedência" onclick="filtrar('Sem procedência',this)">Sem procedência</button>
+    </div>
+    <div id="lista-ocorrencias"></div>
+  </section>
+
+  <!-- ===== DETALHE / TRATATIVA ===== -->
+  <section id="tela-detalhe" style="display:none">
+    <div class="topo"><button class="voltar" onclick="voltarLista()">←</button><h2>Tratar ocorrência</h2></div>
+    <div class="card">
+      <div id="detalhe-info"></div>
+      <span class="rotulo">Status</span>
+      <select id="f-status">
+        <option value="Recebido">Recebido</option>
+        <option value="Em análise">Em análise</option>
+        <option value="Resolvido">Resolvido</option>
+        <option value="Sem procedência">Sem procedência</option>
+      </select>
+      <span class="rotulo">Segurança responsável</span>
+      <select id="f-responsavel">
+        <option value="">Selecione o segurança...</option>
+      </select>
+      <span class="rotulo">Ação tomada</span>
+      <textarea id="f-acao" maxlength="500" placeholder="Descreva a ação realizada..."></textarea>
+      <button class="btn btn-verde" style="margin-top:14px" onclick="salvarTratamento()">💾 Salvar tratamento</button>
+      <div class="erro" id="erro-tratamento"></div>
+    </div>
+  </section>
+
+  <!-- ===== CADASTRO DE SEGURANÇAS (NOVO) ===== -->
+  <section id="tela-segurancas" style="display:none">
+    <div class="topo"><button class="voltar" onclick="voltarLista()">←</button><h2>Cadastro de Seguranças</h2></div>
+    <div class="card">
+      <h3>➕ Novo segurança</h3>
+      <span class="rotulo">Nome completo</span>
+      <input id="f-nome" type="text" placeholder="Nome completo do segurança" maxlength="80">
+      <span class="rotulo">Telefone de contato</span>
+      <input id="f-telefone" type="tel" placeholder="(14) 99999-9999" maxlength="20">
+      <button class="btn btn-verde" style="margin-top:14px" onclick="cadastrarSeguranca()">💾 Cadastrar</button>
+      <div class="erro" id="erro-seguranca"></div>
+      <div class="sucesso" id="ok-seguranca"></div>
+    </div>
+    <div class="card">
+      <h3>👥 Equipe cadastrada</h3>
+      <div id="lista-segurancas"></div>
+    </div>
+  </section>
+
+  <!-- ===== CONFIGURAÇÕES ===== -->
+  <section id="tela-config" style="display:none">
+    <div class="topo"><button class="voltar" onclick="voltarLista()">←</button><h2>Configurações</h2></div>
+    <div class="card">
+      <h3>Disponibilidade do app</h3>
+      <p style="color:var(--cinza);font-size:12.5px;margin-bottom:6px">Fora do intervalo definido, o app exibe a tela "indisponível" para os clientes.</p>
+      <span class="rotulo">Ativar restrição de horário</span>
+      <select id="cfg-ativo">
+        <option value="NAO">Não (sempre disponível)</option>
+        <option value="SIM">Sim (apenas no horário)</option>
+      </select>
+      <span class="rotulo">Data de início</span>
+      <input id="cfg-inicio" type="date">
+      <span class="rotulo">Data de fim</span>
+      <input id="cfg-fim" type="date">
+      <span class="rotulo">Hora inicial</span>
+      <input id="cfg-hora-ini" type="time">
+      <span class="rotulo">Hora final</span>
+      <input id="cfg-hora-fim" type="time">
+      <span class="rotulo">Dias de funcionamento (separados por vírgula)</span>
+      <input id="cfg-dias" type="text" placeholder="SEX,SAB,DOM" maxlength="40">
+      <p style="color:var(--cinza);font-size:11.5px;margin-top:6px">Dias aceitos: DOM, SEG, TER, QUA, QUI, SEX, SAB. Suporta horário que cruza a meia-noite (ex.: 19:00 às 03:00).</p>
+      <button class="btn btn-verde" style="margin-top:14px" onclick="salvarConfig()">💾 Salvar configuração</button>
+      <div class="erro" id="erro-config"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ====== CONFIG ====== */
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7nR8HWULpcxpLxrOfcKtY3oT8g_jmHPJD1p-01KQd60qbFGEhpc30hxmHzbV0ODY/exec';
+const SENHA = 'villa2026'; // troque pela senha da equipe
+
+/* ====== ESTADO ====== */
+let ocorrencias = [];
+let filtroAtual = 'todos';
+let ocorrenciaAtual = null;
+let segurancas = [];
+
+/* ====== LOGIN ====== */
+function entrar(){
+  const s = document.getElementById('f-senha').value;
+  if(s === SENHA){
+    sessionStorage.setItem('vs_equipe','ok');
+    document.getElementById('tela-login').style.display='none';
+    document.getElementById('tela-lista').style.display='block';
+    carregarOcorrencias();
+  } else {
+    document.getElementById('erro-login').textContent='Senha incorreta.';
+  }
+}
+function sair(){
+  sessionStorage.removeItem('vs_equipe');
+  location.reload();
+}
+if(sessionStorage.getItem('vs_equipe')==='ok') entrar();
+
+/* ====== OCORRÊNCIAS ====== */
+async function carregarOcorrencias(){
+  const el = document.getElementById('lista-ocorrencias');
+  el.innerHTML = '<div class="carregando">Carregando...</div>';
+  try{
+    const resp = await fetch(WEB_APP_URL + '?listar=1');
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.erro||'Erro');
+    ocorrencias = data.ocorrencias || [];
+    renderLista();
+  }catch(e){
+    el.innerHTML = '<div class="erro">Erro ao carregar. Verifique a URL do Web App.</div>';
+  }
+}
+
+function renderLista(){
+  const el = document.getElementById('lista-ocorrencias');
+  const lista = filtroAtual==='todos' ? ocorrencias : ocorrencias.filter(o=>o.status===filtroAtual);
+  if(!lista.length){ el.innerHTML='<div class="vazio">Nenhuma ocorrência neste filtro.</div>'; return; }
+  el.innerHTML = lista.map(o=>`
+    <div class="ocorrencia ${prioClass(o.prioridade)}" onclick="abrirDetalhe('${o.protocolo}')">
+      <div>
+        <div class="cat">${o.categoria}</div>
+        <div class="meta">${o.protocolo} · ${o.local}${o.mesa?' — Mesa '+o.mesa:''} · ${o.dataHora}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <span class="badge ${prioBadge(o.prioridade)}">${o.prioridade}</span>
+        <span class="badge ${badgeStatus(o.status)}">${o.status}</span>
+      </div>
+    </div>`).join('');
+}
+
+function prioClass(p){ return String(p||'').toLowerCase(); }
+function prioBadge(p){
+  const s = String(p||'').toLowerCase();
+  if(s.indexOf('crít')>=0 || s.indexOf('crit')>=0) return 'b-critica';
+  if(s==='alta') return 'b-alta';
+  if(s.indexOf('méd')>=0 || s.indexOf('med')>=0) return 'b-media';
+  return 'b-baixa';
+}
+function badgeStatus(status){
+  const s = String(status||'').toLowerCase();
+  if(s.indexOf('recebido')>=0) return 'b-recebido';
+  if(s.indexOf('análise')>=0 || s.indexOf('analise')>=0) return 'b-analise';
+  if(s.indexOf('resolvido')>=0) return 'b-resolvido';
+  if(s.indexOf('procedência')>=0 || s.indexOf('procedencia')>=0) return 'b-semprocedencia';
+  return 'b-recebido';
+}
+function filtrar(f, btn){
+  filtroAtual = f;
+  document.querySelectorAll('#filtros button').forEach(b=>b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  renderLista();
+}
+
+/* ====== DETALHE ====== */
+async function abrirDetalhe(protocolo){
+  ocorrenciaAtual = ocorrencias.find(o=>o.protocolo===protocolo);
+  if(!ocorrenciaAtual) return;
+  const o = ocorrenciaAtual;
+  document.getElementById('detalhe-info').innerHTML = `
+    <div class="detalhe-linha"><span class="k">Protocolo</span><span class="v">${o.protocolo}</span></div>
+    <div class="detalhe-linha"><span class="k">Categoria</span><span class="v">${o.categoria}</span></div>
+    <div class="detalhe-linha"><span class="k">Prioridade</span><span class="v">${o.prioridade}</span></div>
+    <div class="detalhe-linha"><span class="k">Local</span><span class="v">${o.local}${o.mesa?' — Mesa '+o.mesa:''}</span></div>
+    <div class="detalhe-linha"><span class="k">Recebido em</span><span class="v">${o.dataHora}</span></div>
+    <div class="detalhe-linha"><span class="k">Descrição</span><span class="v">${o.descricao||'—'}</span></div>
+    ${o.midia?`<div class="detalhe-linha"><span class="k">Mídia</span><span class="v"><a class="link-midia" href="${o.midia}" target="_blank" rel="noopener">Ver anexo ↗</a></span></div>`:''}
+  `;
+  /* Carrega a equipe e preenche o seletor de responsável */
+  await carregarSegurancas();
+  preencherSelectResponsavel(o.responsavel||'');
+  document.getElementById('f-status').value = o.status;
+  document.getElementById('f-acao').value = o.acao||'';
+  document.getElementById('erro-tratamento').textContent='';
+  document.getElementById('tela-lista').style.display='none';
+  document.getElementById('tela-detalhe').style.display='block';
+}
+
+/* Preenche o <select> de responsável com a equipe cadastrada */
+function preencherSelectResponsavel(valorAtual){
+  const sel = document.getElementById('f-responsavel');
+  let html = '<option value="">Selecione o segurança...</option>';
+  segurancas.forEach(s=>{
+    const nome = escaparHtml(s.nome);
+    const selecionada = (s.nome === valorAtual) ? 'selected' : '';
+    html += `<option value="${nome}" ${selecionada}>${nome} — ${escaparHtml(s.telefone||'')}</option>`;
+  });
+  /* Se o valor antigo (digitado antes) não está na lista, preserva como opção */
+  const existe = segurancas.some(s=>s.nome === valorAtual);
+  if(valorAtual && !existe){
+    html += `<option value="${escaparHtml(valorAtual)}" selected>${escaparHtml(valorAtual)}</option>`;
+  }
+  sel.innerHTML = html;
+}
+
+function voltarLista(){
+  document.getElementById('tela-detalhe').style.display='none';
+  document.getElementById('tela-config').style.display='none';
+  document.getElementById('tela-segurancas').style.display='none';
+  document.getElementById('tela-lista').style.display='block';
+  carregarOcorrencias();
+}
+
+/* ====== SALVAR TRATAMENTO ====== */
+async function salvarTratamento(){
+  const o = ocorrenciaAtual;
+  if(!o) return;
+  const payload = {
+    acao:'atualizar',
+    protocolo: o.protocolo,
+    status: document.getElementById('f-status').value,
+    responsavel: document.getElementById('f-responsavel').value,
+    acaoTomada: document.getElementById('f-acao').value
+  };
+  try{
+    const resp = await fetch(WEB_APP_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload)});
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.erro||'Erro');
+    alert('Ocorrência atualizada!');
+    voltarLista();
+  }catch(e){
+    document.getElementById('erro-tratamento').textContent='Erro ao salvar: '+e.message;
+  }
+}
+
+/* ====== SEGURANÇAS (cadastro) ====== */
+function abrirSegurancas(){
+  document.getElementById('tela-lista').style.display='none';
+  document.getElementById('tela-segurancas').style.display='block';
+  document.getElementById('erro-seguranca').textContent='';
+  document.getElementById('ok-seguranca').textContent='';
+  carregarSegurancas().then(renderSegurancas);
+}
+
+async function carregarSegurancas(){
+  try{
+    const resp = await fetch(WEB_APP_URL + '?segurancas=1');
+    const data = await resp.json();
+    segurancas = (data.ok && data.segurancas) ? data.segurancas : [];
+  }catch(e){ segurancas = []; }
+}
+
+function renderSegurancas(){
+  const el = document.getElementById('lista-segurancas');
+  if(!segurancas.length){ el.innerHTML='<div class="vazio">Nenhum segurança cadastrado ainda.</div>'; return; }
+  el.innerHTML = segurancas.map(s=>`
+    <div class="seguranca">
+      <div>
+        <div class="nm">🛡️ ${escaparHtml(s.nome)}</div>
+        <div class="tl">📞 ${escaparHtml(s.telefone||'—')} · desde ${escaparHtml(s.dataCadastro||'')}</div>
+      </div>
+      <button class="remover" onclick="removerSeguranca(${s.linha})">✕ Remover</button>
+    </div>`).join('');
+}
+
+async function cadastrarSeguranca(){
+  const nome = document.getElementById('f-nome').value.trim();
+  const telefone = document.getElementById('f-telefone').value.trim();
+  const errEl = document.getElementById('erro-seguranca');
+  const okEl = document.getElementById('ok-seguranca');
+  errEl.textContent=''; okEl.textContent='';
+  if(!nome || !telefone){ errEl.textContent='Preencha o nome completo e o telefone.'; return; }
+  try{
+    const payload = {acao:'cadastrar_seguranca', nome:nome, telefone:telefone};
+    const resp = await fetch(WEB_APP_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload)});
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.erro||'Erro');
+    document.getElementById('f-nome').value='';
+    document.getElementById('f-telefone').value='';
+    okEl.textContent = '✅ ' + nome + ' cadastrado(a)!';
+    await carregarSegurancas();
+    renderSegurancas();
+  }catch(e){
+    errEl.textContent='Erro ao cadastrar: '+e.message;
+  }
+}
+
+async function removerSeguranca(linha){
+  if(!confirm('Remover este segurança da equipe?')) return;
+  try{
+    const payload = {acao:'remover_seguranca', linha:linha};
+    const resp = await fetch(WEB_APP_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload)});
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.erro||'Erro');
+    document.getElementById('ok-seguranca').textContent='✅ Segurança removido.';
+    await carregarSegurancas();
+    renderSegurancas();
+  }catch(e){
+    document.getElementById('erro-seguranca').textContent='Erro ao remover: '+e.message;
+  }
+}
+
+function escaparHtml(t){
+  return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ====== CONFIGURAÇÕES ====== */
+async function abrirConfig(){
+  try{
+    const resp = await fetch(WEB_APP_URL + '?config=1');
+    const data = await resp.json();
+    document.getElementById('cfg-ativo').value = data.ativo || 'NAO';
+    document.getElementById('cfg-inicio').value = data.dataInicio || '';
+    document.getElementById('cfg-fim').value = data.dataFim || '';
+    document.getElementById('cfg-hora-ini').value = data.horaInicial || '';
+    document.getElementById('cfg-hora-fim').value = data.horaFinal || '';
+    document.getElementById('cfg-dias').value = data.dias || '';
+    document.getElementById('erro-config').textContent='';
+    document.getElementById('tela-lista').style.display='none';
+    document.getElementById('tela-config').style.display='block';
+  }catch(e){
+    document.getElementById('erro-config').textContent='Erro ao carregar configuração.';
+  }
+}
+async function salvarConfig(){
+  const payload = {
+    acao:'config',
+    ativo: document.getElementById('cfg-ativo').value,
+    dataInicio: document.getElementById('cfg-inicio').value,
+    dataFim: document.getElementById('cfg-fim').value,
+    horaInicial: document.getElementById('cfg-hora-ini').value,
+    horaFinal: document.getElementById('cfg-hora-fim').value,
+    dias: document.getElementById('cfg-dias').value
+  };
+  try{
+    const resp = await fetch(WEB_APP_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(payload)});
+    const data = await resp.json();
+    if(!data.ok) throw new Error(data.erro||'Erro');
+    alert('Configuração salva!');
+    voltarLista();
+  }catch(e){
+    document.getElementById('erro-config').textContent='Erro ao salvar: '+e.message;
+  }
+}
+</script>
+</body>
+</html>
