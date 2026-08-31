@@ -19,27 +19,23 @@
   .tela.ativa{display:block;animation:fade .25s ease}
   @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  /* Header */
   .header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
   .escudo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--roxo),var(--roxo2));
           display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 16px rgba(139,92,246,.4)}
   .header h1{font-size:20px;font-weight:800}
   .header p{font-size:12px;color:var(--cinza)}
 
-  /* Botão principal */
   .btn-denuncia{width:100%;padding:18px;border:none;border-radius:18px;cursor:pointer;
     background:linear-gradient(135deg,var(--laranja),#ea580c);color:#fff;font-size:17px;font-weight:800;
     display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;
     box-shadow:0 6px 20px rgba(249,115,22,.35)}
   .btn-denuncia:active{transform:scale(.98)}
 
-  /* Botão acompanhar - SEMPRE visível na primeira tela */
   .btn-acompanhar{width:100%;padding:14px;border:1px solid var(--roxo);border-radius:14px;cursor:pointer;
     font-size:14px;font-weight:800;background:transparent;color:var(--texto);margin-bottom:20px;
     display:flex;align-items:center;justify-content:center;gap:8px}
   .btn-acompanhar:active{transform:scale(.98);background:rgba(139,92,246,.15)}
 
-  /* Grid de categorias */
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   .cat{background:var(--card);border:1px solid #2b1e42;border-radius:16px;padding:16px 12px;cursor:pointer;
        text-align:center;transition:.15s}
@@ -48,7 +44,6 @@
   .cat .nm{font-size:12.5px;font-weight:700}
   .cat.selecionada{border-color:var(--roxo);background:var(--card2);box-shadow:0 0 0 2px rgba(139,92,246,.3)}
 
-  /* Cards */
   .card{background:var(--card);border:1px solid #2b1e42;border-radius:16px;padding:16px;margin-bottom:14px}
   .card h3{font-size:15px;margin-bottom:12px;font-weight:800}
   .rotulo{font-size:12px;color:var(--cinza);margin:12px 0 6px;display:block}
@@ -57,7 +52,6 @@
   textarea{resize:vertical;min-height:80px}
   select option{background:var(--card2)}
 
-  /* Botões */
   .btn{width:100%;padding:15px;border:none;border-radius:14px;cursor:pointer;font-size:15px;font-weight:800}
   .btn-prim{background:linear-gradient(135deg,var(--roxo),var(--roxo2));color:#fff}
   .btn-sec{background:transparent;border:1px solid #2b1e42;color:var(--texto)}
@@ -65,18 +59,25 @@
   .linha-botoes{display:flex;gap:10px;margin-top:16px}
   .linha-botoes .btn{flex:1}
 
-  /* Aviso anonimato */
+  /* Botões de mídia: câmera e galeria */
+  .midia-botoes{display:flex;gap:10px;margin-top:6px}
+  .midia-botoes .btn{flex:1;padding:12px;font-size:13px}
+  .btn-camera{background:rgba(139,92,246,.15);border:1px solid var(--roxo);color:#c4b5fd}
+  .btn-galeria{background:rgba(249,115,22,.12);border:1px solid var(--laranja);color:#fdba74}
+  .preview-midia{margin-top:10px;border-radius:12px;overflow:hidden;border:1px solid #2b1e42;display:none}
+  .preview-midia img,.preview-midia video{width:100%;display:block;max-height:220px;object-fit:cover}
+  .preview-midia .remover{width:100%;padding:8px;background:var(--card2);border:none;color:var(--vermelho);
+    font-size:12px;font-weight:700;cursor:pointer}
+
   .aviso{display:flex;gap:10px;align-items:flex-start;background:rgba(139,92,246,.12);
          border:1px solid rgba(139,92,246,.35);border-radius:12px;padding:12px;font-size:12.5px;color:#d9c9ff}
 
-  /* Protocolo */
   .protocolo{text-align:center;padding:26px 16px}
   .protocolo .num{font-size:34px;font-weight:900;color:var(--laranja);letter-spacing:1px;margin:8px 0}
   .protocolo .ok{font-size:44px}
   .chip{display:inline-block;background:var(--card2);border:1px solid #2b1e42;border-radius:999px;
         padding:6px 14px;font-size:12px;margin:4px}
 
-  /* Timeline */
   .timeline{list-style:none;margin-top:14px}
   .timeline li{display:flex;gap:12px;position:relative;padding-bottom:22px}
   .timeline li:last-child{padding-bottom:0}
@@ -88,7 +89,6 @@
   .timeline .txt .quando{color:var(--cinza);font-size:11.5px}
   .timeline li:not(:last-child)::before{content:'';position:absolute;left:6px;top:18px;bottom:0;width:2px;background:#2b1e42}
 
-  /* Meus relatos */
   .relato{display:flex;justify-content:space-between;align-items:center;background:var(--card);
           border:1px solid #2b1e42;border-radius:12px;padding:12px;margin-bottom:10px}
   .relato .cat{font-size:13px;font-weight:700}
@@ -105,7 +105,6 @@
   .erro{color:var(--vermelho);font-size:12.5px;margin-top:8px;text-align:center}
   .carregando{color:var(--cinza);font-size:13px;text-align:center;padding:16px}
 
-  /* Tela indisponível */
   .indisponivel{text-align:center;padding:60px 16px}
   .indisponivel .ic{font-size:56px;margin-bottom:16px}
   .indisponivel h2{font-size:20px;font-weight:800;margin-bottom:10px}
@@ -117,7 +116,7 @@
 <body>
 <div class="app">
 
-  <!-- ============ TELA INDISPONÍVEL (fora do horário) ============ -->
+  <!-- ============ TELA INDISPONÍVEL ============ -->
   <section id="tela-indisponivel" class="tela">
     <div class="indisponivel">
       <div class="ic">🌙</div>
@@ -127,7 +126,7 @@
     </div>
   </section>
 
-  <!-- ============ T01 - HOME / CATEGORIAS ============ -->
+  <!-- ============ T01 - HOME ============ -->
   <section id="tela-home" class="tela ativa">
     <div class="header">
       <div class="escudo">🛡️</div>
@@ -136,15 +135,10 @@
         <p>Contribuição anônima · Sua segurança importa</p>
       </div>
     </div>
-
     <button class="btn-denuncia" onclick="novaDenuncia()">🛡️ Contribuir</button>
-
-    <!-- Acompanhamento SEMPRE visível na primeira tela -->
     <button class="btn-acompanhar" onclick="irPara('tela-acompanhar')">🔍 Acompanhar protocolo</button>
-
     <h3 style="font-size:14px;margin-bottom:10px">O que está acontecendo?</h3>
     <div class="grid" id="grid-categorias"></div>
-
     <h3 style="font-size:14px;margin:22px 0 10px">Minhas contribuições</h3>
     <div id="lista-relatos"></div>
   </section>
@@ -174,8 +168,23 @@
       <input id="f-mesa" type="text" placeholder="Ex.: 12">
       <span class="rotulo">Descreva (opcional)</span>
       <textarea id="f-desc" maxlength="500" placeholder="Conte o que está acontecendo..."></textarea>
-      <span class="rotulo">Anexar foto/vídeo (opcional, máx 2MB)</span>
-      <input id="f-midia" type="file" accept="image/jpeg,image/png,video/mp4">
+
+      <!-- ===== MÍDIA: câmera OU galeria ===== -->
+      <span class="rotulo">Registrar foto/vídeo (opcional, máx 2MB)</span>
+      <div class="midia-botoes">
+        <button class="btn btn-camera" onclick="document.getElementById('f-camera').click()">📷 Tirar foto</button>
+        <button class="btn btn-galeria" onclick="document.getElementById('f-galeria').click()">🖼️ Galeria</button>
+      </div>
+      <!-- Input oculto que abre a CÂMERA -->
+      <input id="f-camera" type="file" accept="image/*" capture="environment" style="display:none">
+      <!-- Input oculto que abre a GALERIA -->
+      <input id="f-galeria" type="file" accept="image/*,video/*" style="display:none">
+      <!-- Pré-visualização -->
+      <div class="preview-midia" id="preview-midia">
+        <img id="preview-img" alt="Prévia">
+        <video id="preview-video" controls></video>
+        <button class="remover" onclick="removerMidia()">✕ Remover anexo</button>
+      </div>
       <div class="erro" id="erro-midia"></div>
     </div>
     <div class="linha-botoes">
@@ -189,7 +198,7 @@
     <div class="topo"><button class="voltar" onclick="irPara('tela-passo2')">←</button><h2>Confirme sua contribuição</h2></div>
     <div class="card">
       <div id="resumo-confirmacao"></div>
-      <div class="aviso" style="margin-top:14px">🔒 Seu anonimato é garantido. Nenhum dado pessoal é solicitado ou armazenado. Sua contribuição vai direto para a equipe de segurança, ajudando a manter o Villa um ambiente cada vez mais seguro e agradável para todos.</div>
+      <div class="aviso" style="margin-top:14px">🔒 Seu anonimato é garantido. Nenhum dado pessoal é solicitado ou armazenado. Sua contribuição vai direto para a equipe de segurança.</div>
     </div>
     <div class="linha-botoes">
       <button class="btn btn-sec" onclick="irPara('tela-passo2')">← Voltar</button>
@@ -198,7 +207,7 @@
     <div class="carregando" id="status-envio" style="display:none">Enviando...</div>
   </section>
 
-  <!-- ============ T05 - SUCESSO / PROTOCOLO ============ -->
+  <!-- ============ T05 - SUCESSO ============ -->
   <section id="tela-sucesso" class="tela">
     <div class="protocolo">
       <div class="ok">✅</div>
@@ -232,7 +241,7 @@
 
 <script>
 /* ====== CONFIG ====== */
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7nR8HWULpcxpLxrOfcKtY3oT8g_jmHPJD1p-01KQd60qbFGEhpc30hxmHzbV0ODY/exec';
+const WEB_APP_URL = 'COLE_A_URL_DO_WEB_APP_AQUI';
 
 /* ====== DADOS ====== */
 const CATEGORIAS = [
@@ -240,12 +249,12 @@ const CATEGORIAS = [
   {id:'vandalismo',   nome:'Vandalismo',        ic:'🧱', prio:'Alta'},
   {id:'assedio',      nome:'Assédio',           ic:'🚫', prio:'Alta'},
   {id:'suspeita',     nome:'Atitude Suspeita',  ic:'👀', prio:'Média'},
-  {id:'ilicito',      nome:'Ilícitos',      ic:'👥', prio:'Média'},
+  {id:'superlotacao', nome:'Superlotação',      ic:'👥', prio:'Média'},
   {id:'incendio',     nome:'Risco de Incêndio', ic:'🔥', prio:'Crítica'},
   {id:'outros',       nome:'Outros',            ic:'⋯',  prio:'Baixa'}
 ];
 
-let denuncia = {categoria:null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:''};
+let denuncia = {categoria:null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:'', midiaTipo:''};
 let disponivel = true;
 
 /* ====== TOKEN DO DISPOSITIVO ====== */
@@ -265,7 +274,7 @@ function irPara(id){
   window.scrollTo(0,0);
 }
 
-/* ====== VERIFICAÇÃO DE DISPONIBILIDADE ====== */
+/* ====== DISPONIBILIDADE ====== */
 async function checarDisponibilidade(){
   try{
     const resp = await fetch(WEB_APP_URL + '?status=1');
@@ -275,10 +284,7 @@ async function checarDisponibilidade(){
       document.getElementById('horario-msg').textContent = data.mensagem || 'Disponível apenas durante o funcionamento da casa.';
       irPara('tela-indisponivel');
     }
-  }catch(e){
-    // Sem resposta do backend: mantém o app acessível (modo offline de segurança)
-    disponivel = true;
-  }
+  }catch(e){ disponivel = true; }
 }
 
 /* ====== T01: HOME ====== */
@@ -296,11 +302,12 @@ function renderCategoriasPasso(){
 }
 function novaDenuncia(catId){
   if(!disponivel){ checarDisponibilidade(); return; }
-  denuncia = {categoria:catId||null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:''};
+  denuncia = {categoria:catId||null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:'', midiaTipo:''};
   document.getElementById('f-desc').value='';
   document.getElementById('f-mesa').value='';
   document.getElementById('f-midia').value='';
   document.getElementById('erro-midia').textContent='';
+  removerMidia();
   renderCategoriasPasso();
   irPara(catId?'tela-passo2':'tela-passo1');
 }
@@ -314,14 +321,45 @@ document.getElementById('f-local').addEventListener('change',e=>{
 });
 document.getElementById('f-desc').addEventListener('input',e=>denuncia.desc=e.target.value);
 document.getElementById('f-mesa').addEventListener('input',e=>denuncia.mesa=e.target.value);
-document.getElementById('f-midia').addEventListener('change',e=>{
-  const f=e.target.files[0];
-  if(!f){denuncia.midia=null;return;}
-  if(f.size>2*1024*1024){ document.getElementById('erro-midia').textContent='Arquivo muito grande (máx 2MB na POC).'; denuncia.midia=null; return; }
-  const r=new FileReader();
-  r.onload=()=>{ denuncia.midia=r.result.split(',')[1]; denuncia.midiaNome=f.name; };
-  r.readAsDataURL(f);
-});
+
+/* ====== MÍDIA: câmera e galeria ====== */
+function processarArquivo(file){
+  if(!file){ return; }
+  if(file.size > 2*1024*1024){
+    document.getElementById('erro-midia').textContent='Arquivo muito grande (máx 2MB na POC).';
+    return;
+  }
+  const ehVideo = file.type.startsWith('video/');
+  const r = new FileReader();
+  r.onload = () => {
+    denuncia.midia = r.result.split(',')[1];
+    denuncia.midiaNome = file.name;
+    denuncia.midiaTipo = ehVideo ? 'video' : 'imagem';
+    mostrarPreview(r.result, ehVideo);
+  };
+  r.readAsDataURL(file);
+}
+function mostrarPreview(dataUrl, ehVideo){
+  const box = document.getElementById('preview-midia');
+  const img = document.getElementById('preview-img');
+  const video = document.getElementById('preview-video');
+  img.style.display = ehVideo ? 'none' : 'block';
+  video.style.display = ehVideo ? 'block' : 'none';
+  if(ehVideo){ video.src = dataUrl; } else { img.src = dataUrl; }
+  box.style.display = 'block';
+}
+function removerMidia(){
+  denuncia.midia = null; denuncia.midiaNome = ''; denuncia.midiaTipo = '';
+  document.getElementById('preview-midia').style.display = 'none';
+  document.getElementById('preview-img').src = '';
+  document.getElementById('preview-video').src = '';
+  document.getElementById('f-camera').value = '';
+  document.getElementById('f-galeria').value = '';
+}
+// Câmera (foto)
+document.getElementById('f-camera').addEventListener('change',e=>processarArquivo(e.target.files[0]));
+// Galeria (foto ou vídeo)
+document.getElementById('f-galeria').addEventListener('change',e=>processarArquivo(e.target.files[0]));
 
 /* ====== T04: CONFIRMAÇÃO ====== */
 function irParaPasso3(){
@@ -331,11 +369,11 @@ function irParaPasso3(){
     <span class="rotulo">Categoria</span><div><b>${c.ic} ${c.nome}</b> <span class="chip">${c.prio}</span></div>
     <span class="rotulo">Local</span><div><b>${denuncia.local}${denuncia.mesa?' — Mesa '+denuncia.mesa:''}</b></div>
     <span class="rotulo">Descrição</span><div>${denuncia.desc||'—'}</div>
-    ${denuncia.midiaNome?`<span class="rotulo">Anexo</span><div>📎 ${denuncia.midiaNome}</div>`:''}`;
+    ${denuncia.midiaNome?`<span class="rotulo">Anexo</span><div>📎 ${denuncia.midiaNome} (${denuncia.midiaTipo})</div>`:''}`;
   irPara('tela-passo3');
 }
 
-/* ====== ENVIO (F01) ====== */
+/* ====== ENVIO ====== */
 async function enviarDenuncia(){
   const c=CATEGORIAS.find(x=>x.id===denuncia.categoria);
   const statusEl=document.getElementById('status-envio');
@@ -391,7 +429,7 @@ function verMeuProtocolo(){
   consultarProtocolo();
 }
 
-/* ====== T06: ACOMPANHAR (F02) ====== */
+/* ====== T06: ACOMPANHAR ====== */
 async function consultarProtocolo(){
   const proto=document.getElementById('f-protocolo').value.trim();
   const errEl=document.getElementById('erro-protocolo');
