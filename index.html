@@ -104,10 +104,28 @@
   .vazio{color:var(--cinza);text-align:center;font-size:13px;padding:20px 0}
   .erro{color:var(--vermelho);font-size:12.5px;margin-top:8px;text-align:center}
   .carregando{color:var(--cinza);font-size:13px;text-align:center;padding:16px}
+
+  /* Tela indisponível */
+  .indisponivel{text-align:center;padding:60px 16px}
+  .indisponivel .ic{font-size:56px;margin-bottom:16px}
+  .indisponivel h2{font-size:20px;font-weight:800;margin-bottom:10px}
+  .indisponivel p{color:var(--cinza);font-size:14px;line-height:1.5}
+  .indisponivel .horario{display:inline-block;margin-top:16px;background:var(--card2);
+    border:1px solid #2b1e42;border-radius:12px;padding:10px 16px;font-size:13px;color:#c4b5fd}
 </style>
 </head>
 <body>
 <div class="app">
+
+  <!-- ============ TELA INDISPONÍVEL (fora do horário) ============ -->
+  <section id="tela-indisponivel" class="tela">
+    <div class="indisponivel">
+      <div class="ic">🌙</div>
+      <h2>O Villa Seguro está fora do ar no momento</h2>
+      <p>O canal de contribuições fica disponível apenas durante o funcionamento da casa.</p>
+      <div class="horario" id="horario-msg">—</div>
+    </div>
+  </section>
 
   <!-- ============ T01 - HOME / CATEGORIAS ============ -->
   <section id="tela-home" class="tela ativa">
@@ -214,7 +232,6 @@
 
 <script>
 /* ====== CONFIG ====== */
-// COLE AQUI A URL DO WEB APP (Apps Script) após o deploy:
 const WEB_APP_URL = 'COLE_A_URL_DO_WEB_APP_AQUI';
 
 /* ====== DADOS ====== */
@@ -229,8 +246,9 @@ const CATEGORIAS = [
 ];
 
 let denuncia = {categoria:null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:''};
+let disponivel = true;
 
-/* ====== TOKEN DO DISPOSITIVO (chave de acesso por device) ====== */
+/* ====== TOKEN DO DISPOSITIVO ====== */
 function getTokenDispositivo(){
   let token = localStorage.getItem('vs_token');
   if(!token){
@@ -247,6 +265,22 @@ function irPara(id){
   window.scrollTo(0,0);
 }
 
+/* ====== VERIFICAÇÃO DE DISPONIBILIDADE ====== */
+async function checarDisponibilidade(){
+  try{
+    const resp = await fetch(WEB_APP_URL + '?status=1');
+    const data = await resp.json();
+    disponivel = data.disponivel !== false;
+    if(!disponivel){
+      document.getElementById('horario-msg').textContent = data.mensagem || 'Disponível apenas durante o funcionamento da casa.';
+      irPara('tela-indisponivel');
+    }
+  }catch(e){
+    // Sem resposta do backend: mantém o app acessível (modo offline de segurança)
+    disponivel = true;
+  }
+}
+
 /* ====== T01: HOME ====== */
 function renderCategoriasHome(){
   document.getElementById('grid-categorias').innerHTML = CATEGORIAS.map(c=>
@@ -261,6 +295,7 @@ function renderCategoriasPasso(){
   ).join('');
 }
 function novaDenuncia(catId){
+  if(!disponivel){ checarDisponibilidade(); return; }
   denuncia = {categoria:catId||null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:''};
   document.getElementById('f-desc').value='';
   document.getElementById('f-mesa').value='';
@@ -310,11 +345,17 @@ async function enviarDenuncia(){
     mesa:denuncia.mesa, descricao:denuncia.desc,
     midia:denuncia.midia, midiaNome:denuncia.midiaNome,
     canal:'QR Code', timestamp:new Date().toISOString(),
-    token:getTokenDispositivo()   // chave de acesso do dispositivo
+    token:getTokenDispositivo()
   };
   try{
     const resp=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
     const data=await resp.json();
+    if(data.indisponivel){
+      statusEl.style.display='none';
+      document.getElementById('horario-msg').textContent = data.horario || 'Disponível apenas durante o funcionamento.';
+      irPara('tela-indisponivel');
+      return;
+    }
     if(!data.ok) throw new Error(data.erro||'Erro ao enviar');
     document.getElementById('p-protocolo').textContent=data.protocolo;
     salvarRelatoLocal(data.protocolo,c.nome,c.ic,'Recebido');
@@ -327,7 +368,7 @@ async function enviarDenuncia(){
   }
 }
 
-/* ====== RELATOS LOCAIS (localStorage) ====== */
+/* ====== RELATOS LOCAIS ====== */
 function salvarRelatoLocal(protocolo,cat,ic,status){
   const lista=JSON.parse(localStorage.getItem('vs_relatos')||'[]');
   lista.unshift({protocolo,cat,ic,status,quando:new Date().toLocaleString('pt-BR')});
@@ -360,6 +401,11 @@ async function consultarProtocolo(){
     const token = getTokenDispositivo();
     const resp=await fetch(WEB_APP_URL+'?protocolo='+encodeURIComponent(proto)+'&token='+encodeURIComponent(token));
     const data=await resp.json();
+    if(data.indisponivel){
+      document.getElementById('horario-msg').textContent = data.horario || 'Disponível apenas durante o funcionamento.';
+      irPara('tela-indisponivel');
+      return;
+    }
     if(!data.ok){ errEl.textContent=data.erro||'Protocolo não encontrado.'; document.getElementById('card-timeline').style.display='none'; return; }
     renderTimeline(data);
   }catch(e){
@@ -383,6 +429,7 @@ function renderTimeline(data){
 
 /* ====== INIT ====== */
 renderCategoriasHome();
+checarDisponibilidade();
 </script>
 </body>
 </html>
