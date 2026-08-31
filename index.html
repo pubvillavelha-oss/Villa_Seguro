@@ -38,7 +38,7 @@
 
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
   .cat{background:var(--card);border:1px solid #2b1e42;border-radius:16px;padding:16px 12px;cursor:pointer;
-       text-align:center;transition:.15s}
+       text-align:center;transition:.15s;user-select:none}
   .cat:active{transform:scale(.96);border-color:var(--roxo)}
   .cat .ic{font-size:26px;display:block;margin-bottom:8px}
   .cat .nm{font-size:12.5px;font-weight:700}
@@ -59,7 +59,6 @@
   .linha-botoes{display:flex;gap:10px;margin-top:16px}
   .linha-botoes .btn{flex:1}
 
-  /* Botões de mídia: câmera e galeria */
   .midia-botoes{display:flex;gap:10px;margin-top:6px}
   .midia-botoes .btn{flex:1;padding:12px;font-size:13px}
   .btn-camera{background:rgba(139,92,246,.15);border:1px solid var(--roxo);color:#c4b5fd}
@@ -116,7 +115,7 @@
 <body>
 <div class="app">
 
-  <!-- ============ TELA INDISPONÍVEL ============ -->
+  <!-- INDISPONÍVEL -->
   <section id="tela-indisponivel" class="tela">
     <div class="indisponivel">
       <div class="ic">🌙</div>
@@ -126,7 +125,7 @@
     </div>
   </section>
 
-  <!-- ============ T01 - HOME ============ -->
+  <!-- T01 HOME -->
   <section id="tela-home" class="tela ativa">
     <div class="header">
       <div class="escudo">🛡️</div>
@@ -135,27 +134,27 @@
         <p>Contribuição anônima · Sua segurança importa</p>
       </div>
     </div>
-    <button class="btn-denuncia" onclick="novaDenuncia()">🛡️ Contribuir</button>
-    <button class="btn-acompanhar" onclick="irPara('tela-acompanhar')">🔍 Acompanhar protocolo</button>
+    <button class="btn-denuncia" id="btn-contribuir">🛡️ Contribuir</button>
+    <button class="btn-acompanhar" id="btn-acompanhar">🔍 Acompanhar protocolo</button>
     <h3 style="font-size:14px;margin-bottom:10px">O que está acontecendo?</h3>
     <div class="grid" id="grid-categorias"></div>
     <h3 style="font-size:14px;margin:22px 0 10px">Minhas contribuições</h3>
     <div id="lista-relatos"></div>
   </section>
 
-  <!-- ============ T02 - PASSO 1: CATEGORIA ============ -->
+  <!-- T02 PASSO 1: CATEGORIA -->
   <section id="tela-passo1" class="tela">
-    <div class="topo"><button class="voltar" onclick="irPara('tela-home')">←</button><h2>O que está acontecendo?</h2></div>
+    <div class="topo"><button class="voltar" id="voltar-home">←</button><h2>O que está acontecendo?</h2></div>
     <div class="grid" id="grid-cat-passos"></div>
     <div class="linha-botoes">
-      <button class="btn btn-sec" onclick="irPara('tela-home')">Cancelar</button>
-      <button class="btn btn-prim" onclick="irPara('tela-passo2')">Avançar →</button>
+      <button class="btn btn-sec" id="cancelar-p1">Cancelar</button>
+      <button class="btn btn-prim" id="avancar-p1">Avançar →</button>
     </div>
   </section>
 
-  <!-- ============ T03 - PASSO 2: DETALHES ============ -->
+  <!-- T03 PASSO 2: DETALHES -->
   <section id="tela-passo2" class="tela">
-    <div class="topo"><button class="voltar" onclick="irPara('tela-passo1')">←</button><h2>Detalhes</h2></div>
+    <div class="topo"><button class="voltar" id="voltar-p2">←</button><h2>Detalhes</h2></div>
     <div class="card">
       <span class="rotulo">Local</span>
       <select id="f-local">
@@ -169,45 +168,41 @@
       <span class="rotulo">Descreva (opcional)</span>
       <textarea id="f-desc" maxlength="500" placeholder="Conte o que está acontecendo..."></textarea>
 
-      <!-- ===== MÍDIA: câmera OU galeria ===== -->
       <span class="rotulo">Registrar foto/vídeo (opcional, máx 2MB)</span>
       <div class="midia-botoes">
-        <button class="btn btn-camera" onclick="document.getElementById('f-camera').click()">📷 Tirar foto</button>
-        <button class="btn btn-galeria" onclick="document.getElementById('f-galeria').click()">🖼️ Galeria</button>
+        <button class="btn btn-camera" id="btn-camera">📷 Tirar foto</button>
+        <button class="btn btn-galeria" id="btn-galeria">🖼️ Galeria</button>
       </div>
-      <!-- Input oculto que abre a CÂMERA -->
       <input id="f-camera" type="file" accept="image/*" capture="environment" style="display:none">
-      <!-- Input oculto que abre a GALERIA -->
       <input id="f-galeria" type="file" accept="image/*,video/*" style="display:none">
-      <!-- Pré-visualização -->
       <div class="preview-midia" id="preview-midia">
         <img id="preview-img" alt="Prévia">
         <video id="preview-video" controls></video>
-        <button class="remover" onclick="removerMidia()">✕ Remover anexo</button>
+        <button class="remover" id="remover-midia">✕ Remover anexo</button>
       </div>
       <div class="erro" id="erro-midia"></div>
     </div>
     <div class="linha-botoes">
-      <button class="btn btn-sec" onclick="irPara('tela-passo1')">← Voltar</button>
-      <button class="btn btn-prim" onclick="irPara('tela-passo3')">Avançar →</button>
+      <button class="btn btn-sec" id="voltar-p2b">← Voltar</button>
+      <button class="btn btn-prim" id="avancar-p2">Avançar →</button>
     </div>
   </section>
 
-  <!-- ============ T04 - PASSO 3: CONFIRMAÇÃO ============ -->
+  <!-- T04 PASSO 3: CONFIRMAÇÃO -->
   <section id="tela-passo3" class="tela">
-    <div class="topo"><button class="voltar" onclick="irPara('tela-passo2')">←</button><h2>Confirme sua contribuição</h2></div>
+    <div class="topo"><button class="voltar" id="voltar-p3">←</button><h2>Confirme sua contribuição</h2></div>
     <div class="card">
       <div id="resumo-confirmacao"></div>
       <div class="aviso" style="margin-top:14px">🔒 Seu anonimato é garantido. Nenhum dado pessoal é solicitado ou armazenado. Sua contribuição vai direto para a equipe de segurança.</div>
     </div>
     <div class="linha-botoes">
-      <button class="btn btn-sec" onclick="irPara('tela-passo2')">← Voltar</button>
-      <button class="btn btn-prim" onclick="enviarDenuncia()">Enviar contribuição</button>
+      <button class="btn btn-sec" id="voltar-p3b">← Voltar</button>
+      <button class="btn btn-prim" id="enviar">Enviar contribuição</button>
     </div>
     <div class="carregando" id="status-envio" style="display:none">Enviando...</div>
   </section>
 
-  <!-- ============ T05 - SUCESSO ============ -->
+  <!-- T05 SUCESSO -->
   <section id="tela-sucesso" class="tela">
     <div class="protocolo">
       <div class="ok">✅</div>
@@ -217,18 +212,18 @@
       <span class="chip">Status: <b id="p-status">Recebido</b></span>
     </div>
     <div class="linha-botoes">
-      <button class="btn btn-sec" onclick="irPara('tela-home')">Voltar ao início</button>
-      <button class="btn btn-prim" onclick="verMeuProtocolo()">Acompanhar →</button>
+      <button class="btn btn-sec" id="voltar-inicio">Voltar ao início</button>
+      <button class="btn btn-prim" id="acompanhar-agora">Acompanhar →</button>
     </div>
   </section>
 
-  <!-- ============ T06 - ACOMPANHAMENTO ============ -->
+  <!-- T06 ACOMPANHAMENTO -->
   <section id="tela-acompanhar" class="tela">
-    <div class="topo"><button class="voltar" onclick="irPara('tela-home')">←</button><h2>Acompanhar protocolo</h2></div>
+    <div class="topo"><button class="voltar" id="voltar-acompanhar">←</button><h2>Acompanhar protocolo</h2></div>
     <div class="card">
       <span class="rotulo">Número do protocolo</span>
       <input id="f-protocolo" type="text" placeholder="Ex.: VS-1001">
-      <button class="btn btn-prim" style="margin-top:12px" onclick="consultarProtocolo()">Consultar status</button>
+      <button class="btn btn-prim" style="margin-top:12px" id="consultar">Consultar status</button>
       <div class="erro" id="erro-protocolo"></div>
     </div>
     <div class="card" id="card-timeline" style="display:none">
@@ -241,7 +236,7 @@
 
 <script>
 /* ====== CONFIG ====== */
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx7nR8HWULpcxpLxrOfcKtY3oT8g_jmHPJD1p-01KQd60qbFGEhpc30hxmHzbV0ODY/exec';
+const WEB_APP_URL = 'COLE_A_URL_DO_WEB_APP_AQUI';
 
 /* ====== DADOS ====== */
 const CATEGORIAS = [
@@ -257,7 +252,7 @@ const CATEGORIAS = [
 let denuncia = {categoria:null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:'', midiaTipo:''};
 let disponivel = true;
 
-/* ====== TOKEN DO DISPOSITIVO ====== */
+/* ====== TOKEN ====== */
 function getTokenDispositivo(){
   let token = localStorage.getItem('vs_token');
   if(!token){
@@ -287,16 +282,16 @@ async function checarDisponibilidade(){
   }catch(e){ disponivel = true; }
 }
 
-/* ====== T01: HOME ====== */
+/* ====== RENDER ====== */
 function renderCategoriasHome(){
   document.getElementById('grid-categorias').innerHTML = CATEGORIAS.map(c=>
-    `<div class="cat" onclick="novaDenuncia('${c.id}')"><span class="ic">${c.ic}</span><span class="nm">${c.nome}</span></div>`
+    `<div class="cat" data-cat="${c.id}"><span class="ic">${c.ic}</span><span class="nm">${c.nome}</span></div>`
   ).join('');
   renderRelatos();
 }
 function renderCategoriasPasso(){
   document.getElementById('grid-cat-passos').innerHTML = CATEGORIAS.map(c=>
-    `<div class="cat ${denuncia.categoria===c.id?'selecionada':''}" onclick="selCategoria('${c.id}')">
+    `<div class="cat ${denuncia.categoria===c.id?'selecionada':''}" data-cat="${c.id}">
        <span class="ic">${c.ic}</span><span class="nm">${c.nome}</span></div>`
   ).join('');
 }
@@ -305,26 +300,54 @@ function novaDenuncia(catId){
   denuncia = {categoria:catId||null, local:'Mesa', mesa:'', desc:'', midia:null, midiaNome:'', midiaTipo:''};
   document.getElementById('f-desc').value='';
   document.getElementById('f-mesa').value='';
-  document.getElementById('f-midia').value='';
   document.getElementById('erro-midia').textContent='';
   removerMidia();
   renderCategoriasPasso();
-  irPara(catId?'tela-passo2':'tela-passo1');
+  irPara(catId ? 'tela-passo2' : 'tela-passo1');
 }
-function selCategoria(id){ denuncia.categoria=id; renderCategoriasPasso(); }
+function selCategoria(id){ denuncia.categoria = id; renderCategoriasPasso(); }
 
-/* ====== T03: DETALHES ====== */
-document.getElementById('f-local').addEventListener('change',e=>{
-  denuncia.local=e.target.value;
-  document.getElementById('rotulo-mesa').style.display = e.target.value==='Mesa'?'block':'none';
-  document.getElementById('f-mesa').style.display = e.target.value==='Mesa'?'block':'none';
+/* ====== EVENT DELEGATION — CLIQUE NAS CATEGORIAS ====== */
+// Grid da HOME: clicar em uma categoria inicia a contribuição direto no passo 2
+document.getElementById('grid-categorias').addEventListener('click', function(e){
+  const card = e.target.closest('.cat');
+  if(card && card.dataset.cat) novaDenuncia(card.dataset.cat);
 });
-document.getElementById('f-desc').addEventListener('input',e=>denuncia.desc=e.target.value);
-document.getElementById('f-mesa').addEventListener('input',e=>denuncia.mesa=e.target.value);
+// Grid do PASSO 1: clicar seleciona a categoria
+document.getElementById('grid-cat-passos').addEventListener('click', function(e){
+  const card = e.target.closest('.cat');
+  if(card && card.dataset.cat) selCategoria(card.dataset.cat);
+});
 
-/* ====== MÍDIA: câmera e galeria ====== */
+/* ====== BOTÕES (via addEventListener) ====== */
+document.getElementById('btn-contribuir').addEventListener('click', ()=>novaDenuncia());
+document.getElementById('btn-acompanhar').addEventListener('click', ()=>irPara('tela-acompanhar'));
+document.getElementById('voltar-home').addEventListener('click', ()=>irPara('tela-home'));
+document.getElementById('cancelar-p1').addEventListener('click', ()=>irPara('tela-home'));
+document.getElementById('avancar-p1').addEventListener('click', ()=>{
+  if(!denuncia.categoria){ alert('Selecione uma categoria.'); return; }
+  irPara('tela-passo2');
+});
+document.getElementById('voltar-p2').addEventListener('click', ()=>irPara('tela-passo1'));
+document.getElementById('voltar-p2b').addEventListener('click', ()=>irPara('tela-passo1'));
+document.getElementById('avancar-p2').addEventListener('click', irParaPasso3);
+document.getElementById('voltar-p3').addEventListener('click', ()=>irPara('tela-passo2'));
+document.getElementById('voltar-p3b').addEventListener('click', ()=>irPara('tela-passo2'));
+document.getElementById('enviar').addEventListener('click', enviarDenuncia);
+document.getElementById('voltar-inicio').addEventListener('click', ()=>irPara('tela-home'));
+document.getElementById('acompanhar-agora').addEventListener('click', verMeuProtocolo);
+document.getElementById('voltar-acompanhar').addEventListener('click', ()=>irPara('tela-home'));
+document.getElementById('consultar').addEventListener('click', consultarProtocolo);
+
+/* ====== MÍDIA ====== */
+document.getElementById('btn-camera').addEventListener('click', ()=>document.getElementById('f-camera').click());
+document.getElementById('btn-galeria').addEventListener('click', ()=>document.getElementById('f-galeria').click());
+document.getElementById('f-camera').addEventListener('change', e=>processarArquivo(e.target.files[0]));
+document.getElementById('f-galeria').addEventListener('change', e=>processarArquivo(e.target.files[0]));
+document.getElementById('remover-midia').addEventListener('click', removerMidia);
+
 function processarArquivo(file){
-  if(!file){ return; }
+  if(!file) return;
   if(file.size > 2*1024*1024){
     document.getElementById('erro-midia').textContent='Arquivo muito grande (máx 2MB na POC).';
     return;
@@ -356,16 +379,21 @@ function removerMidia(){
   document.getElementById('f-camera').value = '';
   document.getElementById('f-galeria').value = '';
 }
-// Câmera (foto)
-document.getElementById('f-camera').addEventListener('change',e=>processarArquivo(e.target.files[0]));
-// Galeria (foto ou vídeo)
-document.getElementById('f-galeria').addEventListener('change',e=>processarArquivo(e.target.files[0]));
 
-/* ====== T04: CONFIRMAÇÃO ====== */
+/* ====== DETALHES ====== */
+document.getElementById('f-local').addEventListener('change', e=>{
+  denuncia.local = e.target.value;
+  document.getElementById('rotulo-mesa').style.display = e.target.value==='Mesa'?'block':'none';
+  document.getElementById('f-mesa').style.display = e.target.value==='Mesa'?'block':'none';
+});
+document.getElementById('f-desc').addEventListener('input', e=>denuncia.desc = e.target.value);
+document.getElementById('f-mesa').addEventListener('input', e=>denuncia.mesa = e.target.value);
+
+/* ====== CONFIRMAÇÃO ====== */
 function irParaPasso3(){
-  const c=CATEGORIAS.find(x=>x.id===denuncia.categoria);
+  const c = CATEGORIAS.find(x=>x.id===denuncia.categoria);
   if(!c){ alert('Selecione uma categoria.'); return; }
-  document.getElementById('resumo-confirmacao').innerHTML=`
+  document.getElementById('resumo-confirmacao').innerHTML = `
     <span class="rotulo">Categoria</span><div><b>${c.ic} ${c.nome}</b> <span class="chip">${c.prio}</span></div>
     <span class="rotulo">Local</span><div><b>${denuncia.local}${denuncia.mesa?' — Mesa '+denuncia.mesa:''}</b></div>
     <span class="rotulo">Descrição</span><div>${denuncia.desc||'—'}</div>
@@ -375,10 +403,11 @@ function irParaPasso3(){
 
 /* ====== ENVIO ====== */
 async function enviarDenuncia(){
-  const c=CATEGORIAS.find(x=>x.id===denuncia.categoria);
-  const statusEl=document.getElementById('status-envio');
+  const c = CATEGORIAS.find(x=>x.id===denuncia.categoria);
+  if(!c){ alert('Selecione uma categoria.'); return; }
+  const statusEl = document.getElementById('status-envio');
   statusEl.style.display='block';
-  const payload={
+  const payload = {
     categoria:c.nome, prioridade:c.prio, local:denuncia.local,
     mesa:denuncia.mesa, descricao:denuncia.desc,
     midia:denuncia.midia, midiaNome:denuncia.midiaNome,
@@ -386,8 +415,8 @@ async function enviarDenuncia(){
     token:getTokenDispositivo()
   };
   try{
-    const resp=await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-    const data=await resp.json();
+    const resp = await fetch(WEB_APP_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    const data = await resp.json();
     if(data.indisponivel){
       statusEl.style.display='none';
       document.getElementById('horario-msg').textContent = data.horario || 'Disponível apenas durante o funcionamento.';
@@ -395,7 +424,7 @@ async function enviarDenuncia(){
       return;
     }
     if(!data.ok) throw new Error(data.erro||'Erro ao enviar');
-    document.getElementById('p-protocolo').textContent=data.protocolo;
+    document.getElementById('p-protocolo').textContent = data.protocolo;
     salvarRelatoLocal(data.protocolo,c.nome,c.ic,'Recebido');
     statusEl.style.display='none';
     irPara('tela-sucesso');
@@ -408,37 +437,37 @@ async function enviarDenuncia(){
 
 /* ====== RELATOS LOCAIS ====== */
 function salvarRelatoLocal(protocolo,cat,ic,status){
-  const lista=JSON.parse(localStorage.getItem('vs_relatos')||'[]');
+  const lista = JSON.parse(localStorage.getItem('vs_relatos')||'[]');
   lista.unshift({protocolo,cat,ic,status,quando:new Date().toLocaleString('pt-BR')});
   localStorage.setItem('vs_relatos',JSON.stringify(lista));
   renderRelatos();
 }
 function renderRelatos(){
-  const lista=JSON.parse(localStorage.getItem('vs_relatos')||'[]');
-  const el=document.getElementById('lista-relatos');
+  const lista = JSON.parse(localStorage.getItem('vs_relatos')||'[]');
+  const el = document.getElementById('lista-relatos');
   if(!lista.length){ el.innerHTML='<div class="vazio">Você ainda não fez contribuições.</div>'; return; }
-  el.innerHTML=lista.map(r=>`
+  el.innerHTML = lista.map(r=>`
     <div class="relato">
       <div><div class="cat">${r.ic} ${r.cat}</div><div class="st">${r.protocolo} · ${r.quando}</div></div>
       <span class="badge b-${r.status.toLowerCase().replace(/[^a-z]/g,'')}">${r.status}</span>
     </div>`).join('');
 }
 function verMeuProtocolo(){
-  document.getElementById('f-protocolo').value=document.getElementById('p-protocolo').textContent;
+  document.getElementById('f-protocolo').value = document.getElementById('p-protocolo').textContent;
   irPara('tela-acompanhar');
   consultarProtocolo();
 }
 
-/* ====== T06: ACOMPANHAR ====== */
+/* ====== ACOMPANHAR ====== */
 async function consultarProtocolo(){
-  const proto=document.getElementById('f-protocolo').value.trim();
-  const errEl=document.getElementById('erro-protocolo');
+  const proto = document.getElementById('f-protocolo').value.trim();
+  const errEl = document.getElementById('erro-protocolo');
   errEl.textContent='';
   if(!proto){ errEl.textContent='Informe o número do protocolo.'; return; }
   try{
     const token = getTokenDispositivo();
-    const resp=await fetch(WEB_APP_URL+'?protocolo='+encodeURIComponent(proto)+'&token='+encodeURIComponent(token));
-    const data=await resp.json();
+    const resp = await fetch(WEB_APP_URL+'?protocolo='+encodeURIComponent(proto)+'&token='+encodeURIComponent(token));
+    const data = await resp.json();
     if(data.indisponivel){
       document.getElementById('horario-msg').textContent = data.horario || 'Disponível apenas durante o funcionamento.';
       irPara('tela-indisponivel');
@@ -451,13 +480,13 @@ async function consultarProtocolo(){
   }
 }
 function renderTimeline(data){
-  document.getElementById('tl-titulo').textContent=`${data.protocolo} — ${data.categoria}`;
-  const passos=[
+  document.getElementById('tl-titulo').textContent = `${data.protocolo} — ${data.categoria}`;
+  const passos = [
     {nome:'Recebido', feito:true, quando:data.recebido},
     {nome:'Em análise', feito:['Em análise','Resolvido'].includes(data.status), ativo:data.status==='Em análise', quando:data.emAnalise},
     {nome:'Resolvido', feito:data.status==='Resolvido', quando:data.resolvido}
   ];
-  document.getElementById('tl-lista').innerHTML=passos.map(p=>`
+  document.getElementById('tl-lista').innerHTML = passos.map(p=>`
     <li class="${p.feito?'feito':''} ${p.ativo?'ativo':''}">
       <div class="ponto"></div>
       <div class="txt"><b>${p.nome}</b><br><span class="quando">${p.quando||'—'}</span></div>
